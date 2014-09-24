@@ -14,23 +14,453 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#FFFFFF"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context=".MainActivity" >
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
 
-    <Button
-        android:id="@+id/voiceButton"
-        android:layout_width="wrap_content"
+
+    <TableLayout
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:layout_gravity="center"
-        android:background="@drawable/voice_button" />
+        android:id="@+id/tableLayout">
 
-</RelativeLayout>
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="18dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="@string/header1"
+                android:id="@+id/textView" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/header2"
+                android:id="@+id/textView2"
+                android:layout_weight="1" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="@string/header3"
+                android:id="@+id/textView3"
+                android:maxWidth="70dp"
+                android:minWidth="60dp"
+                android:layout_gravity="center_vertical" />
+        </LinearLayout>
+
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:id="@+id/tableRow"
+            android:focusableInTouchMode="false">
+
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/hidden0"
+                android:layout_column="0"
+                android:checked="false" />
+
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/name0"
+                android:minWidth="200dp"
+                android:layout_column="1"
+                android:editable="false"
+                android:inputType="text"
+                android:layout_weight="1"
+                android:gravity="center" />
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/initiative0"
+                android:numeric="signed"
+                android:inputType="numberSigned"
+                android:maxLength="3"
+                android:layout_column="4"
+                android:minWidth="60dp"
+                android:gravity="center" />
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:id="@+id/tableRow1" >
+
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/hidden1"
+                android:layout_column="0"
+                android:checked="false" />
+
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/name1"
+                android:minWidth="200dp"
+                android:layout_column="1"
+                android:editable="false"
+                android:inputType="text"
+                android:layout_weight="1"
+                android:gravity="center" />
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/initiative1"
+                android:numeric="signed"
+                android:inputType="numberSigned"
+                android:maxLength="3"
+                android:layout_column="4"
+                android:minWidth="60dp"
+                android:gravity="center" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:id="@+id/tableRow2" >
+
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/hidden2"
+                android:layout_column="0"
+                android:checked="false" />
+
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/name2"
+                android:minWidth="200dp"
+                android:layout_column="1"
+                android:editable="false"
+                android:inputType="text"
+                android:layout_weight="1"
+                android:gravity="center" />
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/initiative2"
+                android:numeric="signed"
+                android:inputType="numberSigned"
+                android:maxLength="3"
+                android:layout_column="4"
+                android:minWidth="60dp"
+                android:gravity="center" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:id="@+id/tableRow3" >
+
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/hidden3"
+                android:layout_column="0"
+                android:checked="false" />
+
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/name3"
+                android:minWidth="200dp"
+                android:layout_column="1"
+                android:editable="false"
+                android:inputType="text"
+                android:layout_weight="1"
+                android:gravity="center" />
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/initiative3"
+                android:numeric="signed"
+                android:inputType="numberSigned"
+                android:maxLength="3"
+                android:layout_column="4"
+                android:minWidth="60dp"
+                android:gravity="center" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:id="@+id/tableRow4"
+            android:focusableInTouchMode="false" >
+
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/hidden4"
+                android:layout_column="0"
+                android:checked="false" />
+
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/name4"
+                android:minWidth="200dp"
+                android:layout_column="1"
+                android:editable="false"
+                android:inputType="text"
+                android:layout_weight="1"
+                android:gravity="center" />
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/initiative4"
+                android:numeric="signed"
+                android:inputType="numberSigned"
+                android:maxLength="3"
+                android:layout_column="4"
+                android:minWidth="60dp"
+                android:gravity="center" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:id="@+id/tableRow5" >
+
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/hidden5"
+                android:layout_column="0"
+                android:checked="false" />
+
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/name5"
+                android:minWidth="200dp"
+                android:layout_column="1"
+                android:editable="false"
+                android:inputType="text"
+                android:layout_weight="1"
+                android:gravity="center" />
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/initiative5"
+                android:numeric="signed"
+                android:inputType="numberSigned"
+                android:maxLength="3"
+                android:layout_column="4"
+                android:minWidth="60dp"
+                android:gravity="center" />
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:id="@+id/tableRow6" >
+
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/hidden6"
+                android:layout_column="0"
+                android:checked="false" />
+
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/name6"
+                android:minWidth="200dp"
+                android:layout_column="1"
+                android:editable="false"
+                android:inputType="text"
+                android:layout_weight="1"
+                android:gravity="center" />
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/initiative6"
+                android:numeric="signed"
+                android:inputType="numberSigned"
+                android:maxLength="3"
+                android:layout_column="4"
+                android:minWidth="60dp"
+                android:gravity="center" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:id="@+id/tableRow7" >
+
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/hidden7"
+                android:layout_column="0"
+                android:checked="false" />
+
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/name7"
+                android:minWidth="200dp"
+                android:layout_column="1"
+                android:editable="false"
+                android:inputType="text"
+                android:layout_weight="1"
+                android:gravity="center" />
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/initiative7"
+                android:numeric="signed"
+                android:inputType="numberSigned"
+                android:maxLength="3"
+                android:layout_column="4"
+                android:minWidth="60dp"
+                android:gravity="center" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:id="@+id/tableRow8" >
+
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/hidden8"
+                android:layout_column="0"
+                android:checked="false" />
+
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/name8"
+                android:minWidth="200dp"
+                android:layout_column="1"
+                android:editable="false"
+                android:inputType="text"
+                android:layout_weight="1"
+                android:gravity="center" />
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/initiative8"
+                android:numeric="signed"
+                android:inputType="numberSigned"
+                android:maxLength="3"
+                android:layout_column="4"
+                android:minWidth="60dp"
+                android:gravity="center" />
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:id="@+id/tableRow9" >
+
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/hidden9"
+                android:layout_column="0"
+                android:checked="false" />
+
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/name9"
+                android:minWidth="200dp"
+                android:layout_column="1"
+                android:editable="false"
+                android:inputType="text"
+                android:layout_weight="1"
+                android:gravity="center" />
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/initiative9"
+                android:numeric="signed"
+                android:inputType="numberSigned"
+                android:maxLength="3"
+                android:layout_column="4"
+                android:minWidth="60dp"
+                android:gravity="center" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:id="@+id/tableRow10" >
+
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/hidden10"
+                android:layout_column="0"
+                android:checked="false" />
+
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/name10"
+                android:minWidth="200dp"
+                android:layout_column="1"
+                android:editable="false"
+                android:inputType="text"
+                android:layout_weight="1"
+                android:gravity="center" />
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/initiative10"
+                android:numeric="signed"
+                android:inputType="numberSigned"
+                android:maxLength="3"
+                android:layout_column="4"
+                android:minWidth="60dp"
+                android:gravity="center" />
+        </TableRow>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:weightSum="1">
+
+            <Button
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/buttontext"
+                android:id="@+id/updateCast"
+                android:layout_column="1"
+                android:layout_weight="1" />
+        </LinearLayout>
+
+    </TableLayout>
+</ScrollView>

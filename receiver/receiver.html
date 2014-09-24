@@ -16,10 +16,21 @@ limitations under the License.
 <!DOCTYPE html>
 <html>
   <head>
+	<script type="text/javascript" src="tablesort.min.js"></script> 
     <style type="text/css">
 	  body {
 	    overflow:hidden;
 	  }
+	  table {
+	    align:center;
+		margin: 0px auto;
+		bgcolor:#000000;
+		width:25%;
+	  }
+	  td {
+	    align:right;
+		bgcolor:#000000;
+	  } 
       div{
 	    height:720PX;
 	    width:1280PX;
@@ -37,10 +48,25 @@ limitations under the License.
     <title>Cast Hello Text</title>
   </head>
   <body>
-	<DIV id="message">Talk to me</DIV>
-    <script type="text/javascript" src="//www.gstatic.com/cast/sdk/libs/receiver/2.0.0/cast_receiver.js"></script>
+	<div>
+		<table id="table1" class="tablesorter">
+			<thead>
+			<tr><th id="pic"><img src="d20.png"></th><th id="init"></th></tr>
+			</thead>
+			<tbody id="message">
+				<tr>
+					<td></td>
+					<td></td>
+				</tr>
+			</tbody>
+		</table></div>
+    <script type="text/javascript" src="http://www.gstatic.com/cast/sdk/libs/receiver/2.0.0/cast_receiver.js"></script> 
+
     <script type="text/javascript">
+	  var sort = new Tablesort(document.getElementById("table1"));
+	  document.getElementById("init").click();
       window.onload = function() {
+
         cast.receiver.logger.setLevelValue(0);
         window.castReceiverManager = cast.receiver.CastReceiverManager.getInstance();
         console.log('Starting Receiver Manager');
@@ -94,9 +120,13 @@ limitations under the License.
       // utility function to display the text message in the input field
       function displayText(text) {
         console.log(text);
+		document.getElementById("pic").innerHTML="";
         document.getElementById("message").innerHTML=text;
-        window.castReceiverManager.setApplicationState(text);
+		sort.refresh();
+
+        window.castReceiverManager.setApplicationState(text); 
       };
+	 
     </script>
   </body>
 </html>

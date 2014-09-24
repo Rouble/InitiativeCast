@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<TableRow
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:id="@+id/tableRow"
+    android:focusableInTouchMode="false">
+
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/hidden"
+        android:layout_column="0"
+        android:checked="false" />
+
+    <EditText
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/name"
+        android:minWidth="200dp"
+        android:layout_column="1"
+        android:editable="false"
+        android:inputType="text"
+        android:layout_weight="1"
+        android:gravity="center" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/initiative"
+        android:numeric="signed"
+        android:inputType="numberSigned"
+        android:maxLength="3"
+        android:layout_column="4"
+        android:minWidth="60dp"
+        android:gravity="center" />
+
+</TableRow>

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.example.casthelloworld;
+package com.rouble.initiative;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -36,6 +36,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.Toast;
 
 import com.google.android.gms.cast.ApplicationMetadata;
@@ -70,26 +74,45 @@ public class MainActivity extends ActionBarActivity {
 	private boolean mApplicationStarted;
 	private boolean mWaitingForReconnect;
 	private String mSessionId;
+    private TableLayout mTable;
+    private String tablestring;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+        
+        mTable = (TableLayout) findViewById(R.id.tableLayout);
 
 		ActionBar actionBar = getSupportActionBar();
 		actionBar.setBackgroundDrawable(new ColorDrawable(
 				android.R.color.transparent));
 
-		// When the user clicks on the button, use Android voice recognition to
-		// get text
-		Button voiceButton = (Button) findViewById(R.id.voiceButton);
-		voiceButton.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				startVoiceRecognitionActivity();
-			}
-		});
+        Button updateCast = (Button) findViewById(R.id.updateCast);
+        updateCast.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tablestring = "";
+                for (int i = 1; i < mTable.getChildCount() - 1; i++){
+                    TableRow mRow = (TableRow) mTable.getChildAt(i);    //get row i
+                    CheckBox mCheck = (CheckBox) mRow.getChildAt(0);    // get check box in row i
+                    EditText mName = (EditText) mRow.getChildAt(1);     //get name field in row i
+                    EditText mIniti = (EditText) mRow.getChildAt(2);    //get initiative field in row i
+                    /*
+                only shows names/initiatives for rows that have names+initiatives and are checked
+                     */
+                    if (mCheck.isChecked() && !mName.getText().toString().equals("") && !mIniti.getText().toString().equals("")) {
+                        tablestring = tablestring
+                                + "<tr>"
+                                +     "<td>" + mName.getText() + "</td>"
+                                +     "<td>" + mIniti.getText() + "</td>"
+                                + "</tr>";
+                    } //TODO: send json objects and let the receiver deal with making the table
+                }
 
+                updateStuffOnScreen(tablestring);
+            }
+        });
 		// Configure Cast device discovery
 		mMediaRouter = MediaRouter.getInstance(getApplicationContext());
 		mMediaRouteSelector = new MediaRouteSelector.Builder()
@@ -98,6 +121,11 @@ public class MainActivity extends ActionBarActivity {
 								.getString(R.string.app_id))).build();
 		mMediaRouterCallback = new MyMediaRouterCallback();
 	}
+
+    private void updateStuffOnScreen(String tablecontents) {
+        Log.d(TAG, tablecontents);
+        sendMessage(tablecontents);
+    }
 
 	/**
 	 * Android voice recognition
@@ -307,7 +335,8 @@ public class MainActivity extends ActionBarActivity {
 
 												// set the initial instructions
 												// on the receiver
-												sendMessage(getString(R.string.instructions));
+												//sendMessage(getString(R.string.instructions));
+                                                Log.e(TAG, "success");
 											} else {
 												Log.e(TAG,
 														"application could not launch");
