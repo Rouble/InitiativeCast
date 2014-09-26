@@ -93,7 +93,7 @@ public class MainActivity extends ActionBarActivity {
             @Override
             public void onClick(View v) {
                 tablestring = "";
-                for (int i = 1; i < mTable.getChildCount() - 1; i++){
+                for (int i = 0; i < mTable.getChildCount(); i++){
                     TableRow mRow = (TableRow) mTable.getChildAt(i);    //get row i
                     CheckBox mCheck = (CheckBox) mRow.getChildAt(0);    // get check box in row i
                     EditText mName = (EditText) mRow.getChildAt(1);     //get name field in row i
