@@ -81,8 +81,8 @@ public class MainActivity extends ActionBarActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-        
-        mTable = (TableLayout) findViewById(R.id.tableLayout);
+
+        mTable = (TableLayout) findViewById(R.id.subTable);
 
 		ActionBar actionBar = getSupportActionBar();
 		actionBar.setBackgroundDrawable(new ColorDrawable(
@@ -120,6 +120,8 @@ public class MainActivity extends ActionBarActivity {
 						CastMediaControlIntent.categoryForCast(getResources()
 								.getString(R.string.app_id))).build();
 		mMediaRouterCallback = new MyMediaRouterCallback();
+
+
 	}
 
     private void updateStuffOnScreen(String tablecontents) {

@@ -16,16 +16,23 @@ limitations under the License.
 <!DOCTYPE html>
 <html>
   <head>
-	<script type="text/javascript" src="tablesort.min.js"></script> 
+	<script type="text/javascript" src="tablesort.js"></script> 
     <style type="text/css">
 	  body {
 	    overflow:hidden;
 	  }
-	  table {
+	  #table1{
 	    align:center;
 		margin: 0px auto;
 		bgcolor:#000000;
 		width:25%;
+		-webkit-transition: color 1s;
+	  }
+	  #table1.fadeout {
+		color:#000000;
+	  }
+	  #table1.fadein {
+		color:#ffffff;
 	  }
 	  td {
 	    align:right;
@@ -51,7 +58,7 @@ limitations under the License.
 	<div>
 		<table id="table1" class="tablesorter">
 			<thead>
-			<tr><th id="pic"><img src="d20.png"></th><th id="init"></th></tr>
+			<tr><th id="pic"><img id="d20" src="d20.png"></th><th class='sort-default' id="init"></th></tr>
 			</thead>
 			<tbody id="message">
 				<tr>
@@ -64,7 +71,7 @@ limitations under the License.
 
     <script type="text/javascript">
 	  var sort = new Tablesort(document.getElementById("table1"));
-	  document.getElementById("init").click();
+
       window.onload = function() {
 
         cast.receiver.logger.setLevelValue(0);
@@ -120,13 +127,21 @@ limitations under the License.
       // utility function to display the text message in the input field
       function displayText(text) {
         console.log(text);
+		document.getElementById("table1").className = "fadeout";
+		
 		document.getElementById("pic").innerHTML="";
-        document.getElementById("message").innerHTML=text;
-		sort.refresh();
-
+        setTimeout(function(){
+			document.getElementById("message").innerHTML=text;
+			sort.refresh();
+			document.getElementById("table1").className = "fadein";
+		},500);
+		
         window.castReceiverManager.setApplicationState(text); 
       };
-	 
+
+	  
+	  
+	  
     </script>
   </body>
 </html>
