@@ -31,13 +31,16 @@ import android.support.v7.media.MediaRouteSelector;
 import android.support.v7.media.MediaRouter;
 import android.support.v7.media.MediaRouter.RouteInfo;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.Toast;
@@ -84,7 +87,12 @@ public class MainActivity extends ActionBarActivity {
 
         mTable = (TableLayout) findViewById(R.id.subTable);
 
-		ActionBar actionBar = getSupportActionBar();
+        for(int i = 0; i < 11; i++){
+            TableRow row = (TableRow) LayoutInflater.from(MainActivity.this).inflate(R.layout.addrow, null);
+            mTable.addView(row);
+        }
+
+        ActionBar actionBar = getSupportActionBar();
 		actionBar.setBackgroundDrawable(new ColorDrawable(
 				android.R.color.transparent));
 
@@ -129,36 +137,7 @@ public class MainActivity extends ActionBarActivity {
         sendMessage(tablecontents);
     }
 
-	/**
-	 * Android voice recognition
-	 */
-	private void startVoiceRecognitionActivity() {
-		Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-		intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
-				RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-		intent.putExtra(RecognizerIntent.EXTRA_PROMPT,
-				getString(R.string.message_to_cast));
-		startActivityForResult(intent, REQUEST_CODE);
-	}
 
-	/*
-	 * Handle the voice recognition response
-	 * 
-	 * @see android.support.v4.app.FragmentActivity#onActivityResult(int, int,
-	 * android.content.Intent)
-	 */
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
-			ArrayList<String> matches = data
-					.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-			if (matches.size() > 0) {
-				Log.d(TAG, matches.get(0));
-				sendMessage(matches.get(0));
-			}
-		}
-		super.onActivityResult(requestCode, resultCode, data);
-	}
 
 	@Override
 	protected void onResume() {
