@@ -143,6 +143,66 @@ public class MainActivity extends ActionBarActivity {
         }
     }
 
+    private void sortRows() {
+        int pass = 0;
+        int init1;
+        int init2;
+        boolean checkTemp;
+        boolean notDone = true;
+        String tempName;
+        String tempInit;
+
+        while(notDone) {
+            notDone = false; //this lets the bubble sort end early
+            pass++;
+
+            for (int i = 0; i < mTable.getChildCount() - pass; i++) {
+                //load up 2 rows to compare
+                TableRow mRow = (TableRow) mTable.getChildAt(i);
+                CheckBox mCheck = (CheckBox) mRow.getChildAt(0);
+                EditText mName = (EditText) mRow.getChildAt(1);
+                EditText mInit = (EditText) mRow.getChildAt(2);
+
+                TableRow mRow2 = (TableRow) mTable.getChildAt(i+1);
+                CheckBox mCheck2 = (CheckBox) mRow2.getChildAt(0);
+                EditText mName2 = (EditText) mRow2.getChildAt(1);
+                EditText mInit2 = (EditText) mRow2.getChildAt(2);
+
+                //deal with empty initiatives without breaking everything
+                if(mInit.getText().toString().equals("")) {
+                    init1 = -500;
+                }
+                else{
+                    init1 = Integer.parseInt(mInit.getText().toString());
+                }
+
+                if(mInit2.getText().toString().equals("")) {
+                    init2 = -500;
+                }
+                else{
+                    init2 = Integer.parseInt(mInit2.getText().toString());
+                }
+
+                //swapping things around
+                if (init1 < init2){
+                    checkTemp = mCheck.isChecked();
+                    tempName = mName.getText().toString();
+                    tempInit = mInit.getText().toString();
+
+                    mCheck.setChecked(mCheck2.isChecked());
+                    mName.setText(mName2.getText().toString());
+                    mInit.setText(mInit2.getText().toString());
+
+                    mCheck2.setChecked(checkTemp);
+                    mName2.setText(tempName);
+                    mInit2.setText(tempInit);
+
+                    notDone = true;
+                }
+            }
+        }
+    }
+
 	@Override
 	protected void onResume() {
 		super.onResume();
@@ -181,8 +241,11 @@ public class MainActivity extends ActionBarActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
         switch(item.getItemId()){
-            case R.id.clrRows:
+            case R.id.clr_rows:
                 clearRows();
+                return true;
+            case R.id.sort_local:
+                sortRows();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

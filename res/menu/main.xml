@@ -23,8 +23,12 @@
         app:actionProviderClass="android.support.v7.app.MediaRouteActionProvider"
         app:showAsAction="always"/>
     <item
-        android:id="@+id/clrRows"
+        android:id="@+id/clr_rows"
         android:title="Clear all rows"
+        />
+    <item
+        android:id="@+id/sort_local"
+        android:title="Sort locally"
         />
 
 </menu>
