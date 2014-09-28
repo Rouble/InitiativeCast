@@ -17,12 +17,9 @@
 package com.rouble.initiative;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
-import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.speech.RecognizerIntent;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
@@ -36,11 +33,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.Toast;
@@ -63,8 +58,6 @@ public class MainActivity extends ActionBarActivity {
 
 	private static final String TAG = MainActivity.class.getSimpleName();
 
-	private static final int REQUEST_CODE = 1;
-
 	private MediaRouter mMediaRouter;
 	private MediaRouteSelector mMediaRouteSelector;
 	private MediaRouter.Callback mMediaRouterCallback;
@@ -78,7 +71,6 @@ public class MainActivity extends ActionBarActivity {
 	private boolean mWaitingForReconnect;
 	private String mSessionId;
     private TableLayout mTable;
-    private String tablestring;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -100,25 +92,8 @@ public class MainActivity extends ActionBarActivity {
         updateCast.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                tablestring = "";
-                for (int i = 0; i < mTable.getChildCount(); i++){
-                    TableRow mRow = (TableRow) mTable.getChildAt(i);    //get row i
-                    CheckBox mCheck = (CheckBox) mRow.getChildAt(0);    // get check box in row i
-                    EditText mName = (EditText) mRow.getChildAt(1);     //get name field in row i
-                    EditText mIniti = (EditText) mRow.getChildAt(2);    //get initiative field in row i
-                    /*
-                only shows names/initiatives for rows that have names+initiatives and are checked
-                     */
-                    if (mCheck.isChecked() && !mName.getText().toString().equals("") && !mIniti.getText().toString().equals("")) {
-                        tablestring = tablestring
-                                + "<tr>"
-                                +     "<td>" + mName.getText() + "</td>"
-                                +     "<td>" + mIniti.getText() + "</td>"
-                                + "</tr>";
-                    } //TODO: send json objects and let the receiver deal with making the table
-                }
 
-                updateStuffOnScreen(tablestring);
+                updateStuffOnScreen();
             }
         });
 		// Configure Cast device discovery
@@ -132,12 +107,41 @@ public class MainActivity extends ActionBarActivity {
 
 	}
 
-    private void updateStuffOnScreen(String tablecontents) {
-        Log.d(TAG, tablecontents);
-        sendMessage(tablecontents);
+    private void updateStuffOnScreen() {
+        String tablestring = "";
+        for (int i = 0; i < mTable.getChildCount(); i++){
+            TableRow mRow = (TableRow) mTable.getChildAt(i);    //get row i
+            CheckBox mCheck = (CheckBox) mRow.getChildAt(0);    // get check box in row i
+            EditText mName = (EditText) mRow.getChildAt(1);     //get name field in row i
+            EditText mIniti = (EditText) mRow.getChildAt(2);    //get initiative field in row i
+                    /*
+                only shows names/initiatives for rows that have names+initiatives and are checked
+                     */
+            if (mCheck.isChecked() && !mName.getText().toString().equals("") && !mIniti.getText().toString().equals("")) {
+                tablestring = tablestring
+                        + "<tr>"
+                        +     "<td>" + mName.getText() + "</td>"
+                        +     "<td>" + mIniti.getText() + "</td>"
+                        + "</tr>";
+            } //TODO: send json objects and let the receiver deal with making the table
+        }
+
+        Log.d(TAG, tablestring);
+        sendMessage(tablestring);
     }
 
+    private void clearRows(){
+        for(int i = 0; i < mTable.getChildCount(); i++){
+            TableRow mRow = (TableRow) mTable.getChildAt(i);
+            CheckBox mCheck = (CheckBox) mRow.getChildAt(0);
+            EditText mName = (EditText) mRow.getChildAt(1);
+            EditText mInit = (EditText) mRow.getChildAt(2);
 
+            mCheck.setChecked(false);
+            mName.setText("");
+            mInit.setText("");
+        }
+    }
 
 	@Override
 	protected void onResume() {
@@ -173,6 +177,17 @@ public class MainActivity extends ActionBarActivity {
 		mediaRouteActionProvider.setRouteSelector(mMediaRouteSelector);
 		return true;
 	}
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        switch(item.getItemId()){
+            case R.id.clrRows:
+                clearRows();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 
 	/**
 	 * Callback for MediaRouter events
