@@ -21,23 +21,33 @@ limitations under the License.
 	  body {
 	    overflow:hidden;
 	  }
+	  
 	  #table1{
 	    align:center;
 		margin: 0px auto;
 		bgcolor:#000000;
 		width:25%;
-		-webkit-transition: color 1s;
+		-webkit-transition: color 0.5s;
 	  }
 	  #table1.fadeout {
-		color:#000000;
+		color: #000000;
 	  }
 	  #table1.fadein {
-		color:#ffffff;
+		color: #ffffff;
 	  }
+	  
 	  td {
 	    align:right;
-		bgcolor:#000000;
+		bgcolor: #000000;
 	  } 
+	  
+	  #d20 {
+	    -webkit-transition: opacity 0.5s;
+	  }
+	  #d20.remove {
+	    opacity: 0;
+	  }
+	  
       div{
 	    height:720PX;
 	    width:1280PX;
@@ -50,7 +60,7 @@ limitations under the License.
 	    font-weight:bold;
 	    font-family:Verdana, Geneva, sans-serif;
 	    font-size:40px;
-	}
+	  }
     </style>
     <title>Cast Hello Text</title>
   </head>
@@ -71,6 +81,7 @@ limitations under the License.
 
     <script type="text/javascript">
 	  var sort = new Tablesort(document.getElementById("table1"));
+	  var firstmsg = true;
 
       window.onload = function() {
 
@@ -129,7 +140,6 @@ limitations under the License.
         console.log(text);
 		document.getElementById("table1").className = "fadeout";
 		
-		document.getElementById("pic").innerHTML="";
         setTimeout(function(){
 			document.getElementById("message").innerHTML=text;
 			sort.refresh();
@@ -137,11 +147,18 @@ limitations under the License.
 		},500);
 		
         window.castReceiverManager.setApplicationState(text); 
+		
+		if(firstmsg) {
+			document.getElementById("d20").className = "remove";
+			
+			setTimeout(function(){
+				document.getElementById("pic").innerHTML="";
+			},500);
+			
+			firstmsg = false;
+		}
       };
 
-	  
-	  
-	  
     </script>
   </body>
 </html>
