@@ -52,6 +52,9 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 /**
  * Main activity to send messages to the receiver.
  */
@@ -111,8 +114,11 @@ public class MainActivity extends ActionBarActivity {
 	}
 
     private void updateStuffOnScreen() {
-        String tablestring = "";
+        JSONArray tableArray = new JSONArray();
+        JSONObject tableObj = new JSONObject();
+
         for (int i = 0; i < mTable.getChildCount(); i++){
+            JSONObject tableRow = new JSONObject();
             TableRow mRow = (TableRow) mTable.getChildAt(i);    //get row i
             CheckBox mCheck = (CheckBox) mRow.getChildAt(0);    // get check box in row i
             EditText mName = (EditText) mRow.getChildAt(1);     //get name field in row i
@@ -121,16 +127,25 @@ public class MainActivity extends ActionBarActivity {
                 only shows names/initiatives for rows that have names+initiatives and are checked
                      */
             if (mCheck.isChecked() && !mName.getText().toString().equals("") && !mIniti.getText().toString().equals("")) {
-                tablestring = tablestring
-                        + "<tr>"
-                        +     "<td>" + mName.getText() + "</td>"
-                        +     "<td>" + mIniti.getText() + "</td>"
-                        + "</tr>";
-            } //TODO: send json objects and let the receiver deal with making the table
+                try {
+                    tableRow.put("name", mName.getText());
+                    tableRow.put("initiative", mIniti.getText());
+                    tableArray.put(i, tableRow);
+                }
+                catch (Exception e)
+                {
+                    Log.e(TAG, "failed adding new rows: " + e);
+                }
+            }
         }
-
-        Log.d(TAG, tablestring);
-        sendMessage(tablestring);
+        try {
+            tableObj.put("table", tableArray);
+        }
+        catch (Exception e) {
+            Log.e(TAG, "failed adding array to tableobj: " + e);
+        }
+        //Log.d(TAG, tablestring);
+        sendMessage(tableObj.toString());
     }
 
     private void clearRows(){
@@ -502,8 +517,10 @@ public class MainActivity extends ActionBarActivity {
 	 * @param message
 	 */
 	private void sendMessage(String message) {
+        Log.d(TAG, message);
 		if (mApiClient != null && mHelloWorldChannel != null) {
 			try {
+
 				Cast.CastApi.sendMessage(mApiClient,
 						mHelloWorldChannel.getNamespace(), message)
 						.setResultCallback(new ResultCallback<Status>() {
@@ -511,6 +528,7 @@ public class MainActivity extends ActionBarActivity {
 							public void onResult(Status result) {
 								if (!result.isSuccess()) {
 									Log.e(TAG, "Sending message failed");
+
 								}
 							}
 						});

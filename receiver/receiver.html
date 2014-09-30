@@ -137,17 +137,16 @@ limitations under the License.
       
       // utility function to display the text message in the input field
       function displayText(text) {
-        console.log(text);
-		document.getElementById("table1").className = "fadeout";
-		
-        setTimeout(function(){
-			document.getElementById("message").innerHTML=text;
-			sort.refresh();
-			document.getElementById("table1").className = "fadein";
-		},500);
+		text = JSON.parse(text);
 		
         window.castReceiverManager.setApplicationState(text); 
-		
+      
+		console.log(text);
+
+		if("table" in text) {
+			updateTable(text);
+		}
+			
 		if(firstmsg) {
 			document.getElementById("d20").className = "remove";
 			
@@ -158,6 +157,27 @@ limitations under the License.
 			firstmsg = false;
 		}
       };
+	  
+	  function updateTable(text) {
+		document.getElementById("table1").className = "fadeout";
+		
+        setTimeout(function(){
+			makeTable(text);
+			sort.refresh();
+			document.getElementById("table1").className = "fadein";
+		},500);
+	  
+	  
+	  };
+	  
+	  function makeTable(text) {
+	    document.getElementById("message").innerHTML = "";
+	    for (x in text.table) {
+			document.getElementById("message").innerHTML=
+				document.getElementById("message").innerHTML + 
+				"<tr><td>" + text.table[x].name + "</td><td>" + text.table[x].initiative + "</td></tr>";
+		}
+	  };
 
     </script>
   </body>
