@@ -28,6 +28,7 @@ import android.support.v7.media.MediaRouteSelector;
 import android.support.v7.media.MediaRouter;
 import android.support.v7.media.MediaRouter.RouteInfo;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -71,6 +72,7 @@ public class MainActivity extends ActionBarActivity {
 	private boolean mWaitingForReconnect;
 	private String mSessionId;
     private TableLayout mTable;
+    private View contextFor; //todo find some other way to get the view that spawned a context menu
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +84,9 @@ public class MainActivity extends ActionBarActivity {
         for(int i = 0; i < 11; i++){
             TableRow row = (TableRow) LayoutInflater.from(MainActivity.this).inflate(R.layout.addrow, null);
             mTable.addView(row);
+
+            TableRow mRow = (TableRow) mTable.getChildAt(i);
+            registerForContextMenu(mRow.getChildAt(1));
         }
 
         ActionBar actionBar = getSupportActionBar();
@@ -103,8 +108,6 @@ public class MainActivity extends ActionBarActivity {
 						CastMediaControlIntent.categoryForCast(getResources()
 								.getString(R.string.app_id))).build();
 		mMediaRouterCallback = new MyMediaRouterCallback();
-
-
 	}
 
     private void updateStuffOnScreen() {
@@ -141,6 +144,16 @@ public class MainActivity extends ActionBarActivity {
             mName.setText("");
             mInit.setText("");
         }
+    }
+    private void clearThisRow(){
+        TableRow mRow = (TableRow) contextFor.getParent();
+        CheckBox mCheck = (CheckBox) mRow.getChildAt(0);
+        EditText mName = (EditText) mRow.getChildAt(1);
+        EditText mInit = (EditText) mRow.getChildAt(2);
+
+        mCheck.setChecked(false);
+        mName.setText("");
+        mInit.setText("");
     }
 
     private void sortRows() {
@@ -203,6 +216,7 @@ public class MainActivity extends ActionBarActivity {
         }
     }
 
+
 	@Override
 	protected void onResume() {
 		super.onResume();
@@ -226,7 +240,19 @@ public class MainActivity extends ActionBarActivity {
 		super.onDestroy();
 	}
 
-	@Override
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+
+        Log.d(TAG, "create context");
+
+        if(v.getId()==R.id.name) {
+            menu.add(Menu.NONE, v.getId(), Menu.NONE, R.string.context1);
+            contextFor = v;
+        }
+        super.onCreateContextMenu(menu, v, menuInfo);
+    }
+
+    @Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
 		getMenuInflater().inflate(R.menu.main, menu);
@@ -252,7 +278,18 @@ public class MainActivity extends ActionBarActivity {
         }
     }
 
-	/**
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        if(item.getTitle().toString().equals("Clear Row")){
+            clearThisRow();
+
+            Toast.makeText(MainActivity.this, "row cleared?", Toast.LENGTH_LONG)
+                    .show();
+        }
+        return super.onContextItemSelected(item);
+    }
+
+    /**
 	 * Callback for MediaRouter events
 	 */
 	private class MyMediaRouterCallback extends MediaRouter.Callback {

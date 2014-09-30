@@ -26,5 +26,6 @@
     <string name="header1">Show</string>
     <string name="header2">Names</string>
     <string name="header3">Initiative</string>
+    <string name="context1">Clear Row</string>
 
 </resources>
