@@ -16,8 +16,12 @@
 
 package com.rouble.initiative;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 
+import android.app.Dialog;
+import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
@@ -82,15 +86,8 @@ public class MainActivity extends ActionBarActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-        mTable = (TableLayout) findViewById(R.id.subTable);
-
-        for(int i = 0; i < 11; i++){
-            TableRow row = (TableRow) LayoutInflater.from(MainActivity.this).inflate(R.layout.addrow, null);
-            mTable.addView(row);
-
-            TableRow mRow = (TableRow) mTable.getChildAt(i);
-            registerForContextMenu(mRow.getChildAt(1));
-        }
+        addRow();
+        loadTable("autosave");
 
         ActionBar actionBar = getSupportActionBar();
 		actionBar.setBackgroundDrawable(new ColorDrawable(
@@ -104,6 +101,23 @@ public class MainActivity extends ActionBarActivity {
                 updateStuffOnScreen();
             }
         });
+
+        Button addARow = (Button) findViewById(R.id.addrow);
+        addARow.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addRow();
+            }
+        });
+
+        Button removeARow = (Button) findViewById(R.id.removerow);
+        removeARow.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                removeRow();
+            }
+        });
+
 		// Configure Cast device discovery
 		mMediaRouter = MediaRouter.getInstance(getApplicationContext());
 		mMediaRouteSelector = new MediaRouteSelector.Builder()
@@ -114,6 +128,13 @@ public class MainActivity extends ActionBarActivity {
 	}
 
     private void updateStuffOnScreen() {
+        String tableString = createTableString();
+        saveTable(tableString, "autosave"); //create/update an autosave in case the app is unintentionally closed
+        sendMessage(tableString);
+    }
+
+    //create json string for the table
+    private String createTableString() {
         JSONArray tableArray = new JSONArray();
         JSONObject tableObj = new JSONObject();
 
@@ -123,31 +144,30 @@ public class MainActivity extends ActionBarActivity {
             CheckBox mCheck = (CheckBox) mRow.getChildAt(0);    // get check box in row i
             EditText mName = (EditText) mRow.getChildAt(1);     //get name field in row i
             EditText mIniti = (EditText) mRow.getChildAt(2);    //get initiative field in row i
-                    /*
-                only shows names/initiatives for rows that have names+initiatives and are checked
-                     */
-            if (mCheck.isChecked() && !mName.getText().toString().equals("") && !mIniti.getText().toString().equals("")) {
-                try {
-                    tableRow.put("name", mName.getText());
-                    tableRow.put("initiative", mIniti.getText());
-                    tableArray.put(i, tableRow);
-                }
-                catch (Exception e)
-                {
-                    Log.e(TAG, "failed adding new rows: " + e);
-                }
+
+            try {
+                tableRow.put("checked", mCheck.isChecked());
+                tableRow.put("name", mName.getText());
+                tableRow.put("initiative", mIniti.getText());
+                tableArray.put(tableRow);
             }
+            catch (Exception e)
+            {
+                Log.e(TAG, "failed adding new rows: ", e);
+            }
+
         }
         try {
             tableObj.put("table", tableArray);
         }
         catch (Exception e) {
-            Log.e(TAG, "failed adding array to tableobj: " + e);
+            Log.e(TAG, "failed adding array to tableobj: ", e);
         }
-        //Log.d(TAG, tablestring);
-        sendMessage(tableObj.toString());
+
+        return  tableObj.toString();
     }
 
+    //clears all rows
     private void clearRows(){
         for(int i = 0; i < mTable.getChildCount(); i++){
             TableRow mRow = (TableRow) mTable.getChildAt(i);
@@ -160,6 +180,8 @@ public class MainActivity extends ActionBarActivity {
             mInit.setText("");
         }
     }
+
+    //clears row selected by long press
     private void clearThisRow(){
         TableRow mRow = (TableRow) contextFor.getParent();
         CheckBox mCheck = (CheckBox) mRow.getChildAt(0);
@@ -171,6 +193,7 @@ public class MainActivity extends ActionBarActivity {
         mInit.setText("");
     }
 
+    //allows user to sort table rows locally
     private void sortRows() {
         int pass = 0;
         int init1;
@@ -190,7 +213,7 @@ public class MainActivity extends ActionBarActivity {
                 CheckBox mCheck = (CheckBox) mRow.getChildAt(0);
                 EditText mName = (EditText) mRow.getChildAt(1);
                 EditText mInit = (EditText) mRow.getChildAt(2);
-
+                    //todo find a way to swap rows instead of their contents
                 TableRow mRow2 = (TableRow) mTable.getChildAt(i+1);
                 CheckBox mCheck2 = (CheckBox) mRow2.getChildAt(0);
                 EditText mName2 = (EditText) mRow2.getChildAt(1);
@@ -231,6 +254,130 @@ public class MainActivity extends ActionBarActivity {
         }
     }
 
+    private void fileDialog(){
+        final Dialog fileDialog = new Dialog(MainActivity.this);
+
+        fileDialog.setContentView(R.layout.file_dialog);
+        fileDialog.setTitle(R.string.choosefile);
+
+        Button savebutton = (Button) fileDialog.findViewById(R.id.savebutton);
+        savebutton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EditText filename = (EditText) fileDialog.findViewById(R.id.filename);
+                saveTable(createTableString(), filename.getText().toString());
+
+                fileDialog.dismiss();
+            }
+        });
+
+        Button loadbutton = (Button) fileDialog.findViewById((R.id.loadbutton));
+        loadbutton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EditText filename = (EditText) fileDialog.findViewById(R.id.filename);
+                loadTable(filename.getText().toString());
+
+                fileDialog.dismiss();
+            }
+        });
+
+        fileDialog.show();
+    }
+
+    //save table json string for loading later
+    public void saveTable(String tableString, String filename) {
+        Log.d(TAG, "table save");
+        FileOutputStream outputStream;
+
+        try{
+            outputStream = openFileOutput(filename, Context.MODE_PRIVATE);
+            outputStream.write(tableString.getBytes());
+            outputStream.close();
+        }
+        catch (Exception e) {
+            Log.e(TAG, "Writing file failed ", e);
+        }
+    }
+
+    public void loadTable(String filename) {
+        FileInputStream inputStream;
+        String tablestring = "";
+        int i;
+
+        Log.d(TAG, "table load");
+
+        try{
+            inputStream = openFileInput(filename);
+            i = inputStream.read();
+            while (i != -1) {
+                tablestring += Character.toString((char) i);
+                i = inputStream.read();
+            }
+        }
+        catch (Exception e){
+            makeToast("File does not exist");
+        }
+        try {
+            mTable = (TableLayout) findViewById(R.id.subTable);
+
+
+            for (int j = 0; j < mTable.getChildCount() - 1; j++) {
+                removeRow();
+            }
+
+            JSONObject tableobj = new JSONObject(tablestring);
+            JSONArray tablearray = tableobj.optJSONArray("table");
+
+            for (int j = 0; j < tablearray.length() - 1; j++) {
+                addRow();
+            }
+
+            for (int j = 0; j < tablearray.length(); j++){
+                TableRow mRow = (TableRow) mTable.getChildAt(j);
+                CheckBox mCheck = (CheckBox) mRow.getChildAt(0);
+                EditText mName = (EditText) mRow.getChildAt(1);
+                EditText mInit = (EditText) mRow.getChildAt(2);
+
+                mCheck.setChecked(tablearray.getJSONObject(j).optBoolean("checked"));
+                mName.setText(tablearray.getJSONObject(j).optString("name"));
+                mInit.setText(tablearray.getJSONObject(j).optString("initiative"));
+            }
+        }
+        catch (Exception e){
+            Log.e(TAG, "converting file to json failed", e);
+        }
+
+    }
+
+    public void addRow(){
+        mTable = (TableLayout) findViewById(R.id.subTable);
+
+        TableRow row = (TableRow) LayoutInflater.from(MainActivity.this).inflate(R.layout.addrow, null);
+        mTable.addView(row);
+
+        TableRow mRow = (TableRow) mTable.getChildAt(mTable.getChildCount() - 1);
+        registerForContextMenu(mRow.getChildAt(1));
+
+    }
+
+    public void removeRow(){
+        mTable = (TableLayout) findViewById(R.id.subTable);
+
+        TableRow mRow = (TableRow) mTable.getChildAt(mTable.getChildCount() - 1);
+
+        if(mTable.getChildCount() == 1){
+            makeToast("There are no rows to remove.");
+        }
+        else {
+            mTable.removeView(mRow);
+        }
+    }
+
+    public void makeToast(String toaster){
+        Toast.makeText(MainActivity.this, toaster, Toast.LENGTH_LONG)
+                .show();
+    }
 
 	@Override
 	protected void onResume() {
@@ -287,6 +434,9 @@ public class MainActivity extends ActionBarActivity {
                 return true;
             case R.id.sort_local:
                 sortRows();
+                return true;
+            case R.id.save_load:
+                fileDialog();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -537,7 +687,7 @@ public class MainActivity extends ActionBarActivity {
 			}
 		} else {
 			Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT)
-					.show();
+					.show(); //todo make this useless by hiding the update button unless casting
 		}
 	}
 

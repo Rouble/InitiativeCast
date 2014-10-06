@@ -51,7 +51,12 @@
             android:minWidth="60dp"
             android:layout_gravity="center_vertical" />
     </LinearLayout>
-
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dip"
+        android:layout_marginLeft="4dip"
+        android:layout_marginRight="4dip"
+        android:background="?android:attr/dividerVertical" />
     <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="fill_parent"
         android:layout_height="0px"
@@ -65,7 +70,12 @@
 
         </TableLayout>
     </ScrollView>
-
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dip"
+        android:layout_marginLeft="4dip"
+        android:layout_marginRight="4dip"
+        android:background="?android:attr/dividerVertical" />
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="fill_parent"
@@ -74,11 +84,41 @@
         android:id="@+id/linearLayout3">
 
         <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="?android:attr/selectableItemBackground"
+            android:text="-"
+            android:id="@+id/removerow"
+            android:layout_weight="0.25" />
+        <View
+            android:layout_width="1dip"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="4dip"
+            android:layout_marginRight="4dip"
+            android:background="?android:attr/dividerHorizontal" />
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="?android:attr/selectableItemBackground"
+            android:text="+"
+            android:id="@+id/addrow"
+            android:layout_weight="0.25" />
+        <View
+            android:layout_width="1dip"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="4dip"
+            android:layout_marginRight="4dip"
+            android:background="?android:attr/dividerHorizontal" />
+
+        <Button
             style="?android:attr/buttonStyleSmall"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/buttontext"
-            android:id="@+id/updateCast" />
+            android:background="?android:attr/selectableItemBackground"
+            android:id="@+id/updateCast"
+            android:layout_weight="0.5" />
     </LinearLayout>
 
 </TableLayout>

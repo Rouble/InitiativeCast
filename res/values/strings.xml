@@ -27,5 +27,9 @@
     <string name="header2">Names</string>
     <string name="header3">Initiative</string>
     <string name="context1">Clear Row</string>
+    <string name="choosefile">Choose a File</string>
+    <string name="save">Save</string>
+    <string name="load">Load</string>
+    <string name="defaultfile">Filename</string>
 
 </resources>
