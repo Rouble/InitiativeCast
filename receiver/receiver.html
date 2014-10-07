@@ -16,7 +16,6 @@ limitations under the License.
 <!DOCTYPE html>
 <html>
   <head>
-	<script type="text/javascript" src="tablesort.js"></script> 
     <style type="text/css">
 	  body {
 	    overflow:hidden;
@@ -66,9 +65,9 @@ limitations under the License.
   </head>
   <body>
 	<div>
-		<table id="table1" class="tablesorter">
+		<table id="table1" >
 			<thead>
-			<tr><th id="pic"><img id="d20" src="d20.png"></th><th class='sort-default' id="init"></th></tr>
+			<tr><th id="pic"><img id="d20" src="d20.png"></th><th id="init"></th></tr>
 			</thead>
 			<tbody id="message">
 				<tr>
@@ -80,7 +79,6 @@ limitations under the License.
     <script type="text/javascript" src="http://www.gstatic.com/cast/sdk/libs/receiver/2.0.0/cast_receiver.js"></script> 
 
     <script type="text/javascript">
-	  var sort = new Tablesort(document.getElementById("table1"));
 	  var firstmsg = true;
 
       window.onload = function() {
@@ -159,25 +157,44 @@ limitations under the License.
       };
 	  
 	  function updateTable(text) {
+	  	
+		sortstuff(text);
+	  
 		document.getElementById("table1").className = "fadeout";
 		
         setTimeout(function(){
 			makeTable(text);
-			sort.refresh();
 			document.getElementById("table1").className = "fadein";
 		},500);
-	  
-	  
 	  };
 	  
 	  function makeTable(text) {
+	
 	    document.getElementById("message").innerHTML = "";
 	    for (x in text.table) {
-			document.getElementById("message").innerHTML=
-				document.getElementById("message").innerHTML + 
-				"<tr><td>" + text.table[x].name + "</td><td>" + text.table[x].initiative + "</td></tr>";
+			if (text.table[x].checked){
+				document.getElementById("message").innerHTML=
+					document.getElementById("message").innerHTML + 
+					"<tr><td>" + text.table[x].name + "</td><td>" + text.table[x].initiative + "</td></tr>";
+			}
 		}
 	  };
+	  
+	  function sortstuff(text) {
+		var swap;
+		do{
+			swap = false;
+			for (var i = 0; i < text.table.length -1; i++){
+				if ((text.table[i].initiative) < (text.table[i+1].initiative)){ //todo add weights here
+					var temp = text.table[i];
+					text.table[i] = text.table[i+1];
+					text.table[i+1] = temp;
+					swap = true;
+				}
+			}
+		}while (swap); 
+	  }
+	  
 
     </script>
   </body>

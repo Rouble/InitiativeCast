@@ -80,7 +80,7 @@ public class MainActivity extends ActionBarActivity {
 	private String mSessionId;
     private TableLayout mTable;
     private View contextFor; //todo find some other way to get the view that spawned a context menu
-
+                             //todo look into animating adding/removing rows and sorting
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -148,7 +148,7 @@ public class MainActivity extends ActionBarActivity {
             try {
                 tableRow.put("checked", mCheck.isChecked());
                 tableRow.put("name", mName.getText());
-                tableRow.put("initiative", mIniti.getText());
+                tableRow.put("initiative", Integer.parseInt(mIniti.getText().toString()));
                 tableArray.put(tableRow);
             }
             catch (Exception e)
@@ -361,12 +361,13 @@ public class MainActivity extends ActionBarActivity {
 
     }
 
+    //removes the last row
     public void removeRow(){
         mTable = (TableLayout) findViewById(R.id.subTable);
 
         TableRow mRow = (TableRow) mTable.getChildAt(mTable.getChildCount() - 1);
 
-        if(mTable.getChildCount() == 1){
+        if(mTable.getChildCount() == 1){  //keep at least one row
             makeToast("There are no rows to remove.");
         }
         else {
@@ -374,6 +375,14 @@ public class MainActivity extends ActionBarActivity {
         }
     }
 
+    //removes specific row
+    private void removeRow(int index){
+//        mTable = (TableLayout) mRow.getParent();
+//        int i = mTable.indexOfChild(mRow);
+
+    }
+
+    //wrapper for toast function to make it easier to use
     public void makeToast(String toaster){
         Toast.makeText(MainActivity.this, toaster, Toast.LENGTH_LONG)
                 .show();

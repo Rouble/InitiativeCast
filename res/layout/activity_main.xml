@@ -23,7 +23,7 @@
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="fill_parent"
-        android:layout_height="18dp"
+        android:layout_height="wrap_content"
         android:id="@+id/linearLayout2">
 
         <TextView
@@ -83,6 +83,7 @@
         android:weightSum="1"
         android:id="@+id/linearLayout3">
 
+        <!--todo get some drawables or a different font for the + and - buttons-->
         <Button
             android:layout_width="0dp"
             android:layout_height="wrap_content"
