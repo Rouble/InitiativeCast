@@ -10,7 +10,7 @@
     android:dividerHorizontal="@android:color/background_light"
     android:dividerVertical="@android:color/background_light"
     android:dividerHeight="1dip">
-
+    <!--todo put a list of files in this dialog-->
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -31,5 +31,6 @@
     <string name="save">Save</string>
     <string name="load">Load</string>
     <string name="defaultfile">Filename</string>
+    <string name="context2">Delete Row</string>
 
 </resources>

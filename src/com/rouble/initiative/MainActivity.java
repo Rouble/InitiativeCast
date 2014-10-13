@@ -97,8 +97,7 @@ public class MainActivity extends ActionBarActivity {
         updateCast.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                updateStuffOnScreen();
+            updateStuffOnScreen();
             }
         });
 
@@ -114,7 +113,7 @@ public class MainActivity extends ActionBarActivity {
         removeARow.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                removeRow();
+                removeLastRow();
             }
         });
 
@@ -137,23 +136,31 @@ public class MainActivity extends ActionBarActivity {
     private String createTableString() {
         JSONArray tableArray = new JSONArray();
         JSONObject tableObj = new JSONObject();
+        double weight;
 
         for (int i = 0; i < mTable.getChildCount(); i++){
             JSONObject tableRow = new JSONObject();
             TableRow mRow = (TableRow) mTable.getChildAt(i);    //get row i
-            CheckBox mCheck = (CheckBox) mRow.getChildAt(0);    // get check box in row i
-            EditText mName = (EditText) mRow.getChildAt(1);     //get name field in row i
-            EditText mIniti = (EditText) mRow.getChildAt(2);    //get initiative field in row i
+            EditText mName = (EditText) mRow.getChildAt(0);     //get name field in row i
+            EditText mIniti = (EditText) mRow.getChildAt(1);    //get initiative field in row i
+            EditText mWeight = (EditText) mRow.getChildAt(2);
+
+            if (mWeight.getText().toString().equals("")){
+                weight = 0;
+            }
+            else{
+                weight = Double.parseDouble(mWeight.getText().toString()) / 10;
+            }
 
             try {
-                tableRow.put("checked", mCheck.isChecked());
                 tableRow.put("name", mName.getText());
                 tableRow.put("initiative", Integer.parseInt(mIniti.getText().toString()));
+                tableRow.put("weight", weight);
                 tableArray.put(tableRow);
             }
             catch (Exception e)
             {
-                Log.e(TAG, "failed adding new rows: ", e);
+                Log.e(TAG, "failed adding new rows ", e);
             }
 
         }
@@ -171,11 +178,9 @@ public class MainActivity extends ActionBarActivity {
     private void clearRows(){
         for(int i = 0; i < mTable.getChildCount(); i++){
             TableRow mRow = (TableRow) mTable.getChildAt(i);
-            CheckBox mCheck = (CheckBox) mRow.getChildAt(0);
-            EditText mName = (EditText) mRow.getChildAt(1);
-            EditText mInit = (EditText) mRow.getChildAt(2);
+            EditText mName = (EditText) mRow.getChildAt(0);
+            EditText mInit = (EditText) mRow.getChildAt(1);
 
-            mCheck.setChecked(false);
             mName.setText("");
             mInit.setText("");
         }
@@ -184,11 +189,9 @@ public class MainActivity extends ActionBarActivity {
     //clears row selected by long press
     private void clearThisRow(){
         TableRow mRow = (TableRow) contextFor.getParent();
-        CheckBox mCheck = (CheckBox) mRow.getChildAt(0);
-        EditText mName = (EditText) mRow.getChildAt(1);
-        EditText mInit = (EditText) mRow.getChildAt(2);
+        EditText mName = (EditText) mRow.getChildAt(0);
+        EditText mInit = (EditText) mRow.getChildAt(1);
 
-        mCheck.setChecked(false);
         mName.setText("");
         mInit.setText("");
     }
@@ -317,13 +320,14 @@ public class MainActivity extends ActionBarActivity {
         }
         catch (Exception e){
             makeToast("File does not exist");
+            return;
         }
         try {
             mTable = (TableLayout) findViewById(R.id.subTable);
 
 
             for (int j = 0; j < mTable.getChildCount() - 1; j++) {
-                removeRow();
+                removeLastRow();
             }
 
             JSONObject tableobj = new JSONObject(tablestring);
@@ -335,11 +339,9 @@ public class MainActivity extends ActionBarActivity {
 
             for (int j = 0; j < tablearray.length(); j++){
                 TableRow mRow = (TableRow) mTable.getChildAt(j);
-                CheckBox mCheck = (CheckBox) mRow.getChildAt(0);
-                EditText mName = (EditText) mRow.getChildAt(1);
-                EditText mInit = (EditText) mRow.getChildAt(2);
+                EditText mName = (EditText) mRow.getChildAt(0);
+                EditText mInit = (EditText) mRow.getChildAt(1);
 
-                mCheck.setChecked(tablearray.getJSONObject(j).optBoolean("checked"));
                 mName.setText(tablearray.getJSONObject(j).optString("name"));
                 mInit.setText(tablearray.getJSONObject(j).optString("initiative"));
             }
@@ -356,13 +358,16 @@ public class MainActivity extends ActionBarActivity {
         TableRow row = (TableRow) LayoutInflater.from(MainActivity.this).inflate(R.layout.addrow, null);
         mTable.addView(row);
 
-        TableRow mRow = (TableRow) mTable.getChildAt(mTable.getChildCount() - 1);
+        TableRow mRow = (TableRow) mTable.getChildAt(mTable.getChildCount() - 1); //last row in the tableview
+        EditText mWeight = (EditText) mRow.getChildAt(2);
+
+        mWeight.setText("0");
         registerForContextMenu(mRow.getChildAt(1));
 
     }
 
     //removes the last row
-    public void removeRow(){
+    public void removeLastRow(){
         mTable = (TableLayout) findViewById(R.id.subTable);
 
         TableRow mRow = (TableRow) mTable.getChildAt(mTable.getChildCount() - 1);
@@ -376,10 +381,10 @@ public class MainActivity extends ActionBarActivity {
     }
 
     //removes specific row
-    private void removeRow(int index){
-//        mTable = (TableLayout) mRow.getParent();
-//        int i = mTable.indexOfChild(mRow);
-
+    private void removeRow(){
+        TableRow mRow = (TableRow) contextFor.getParent();
+        mTable = (TableLayout) mRow.getParent();
+        mTable.removeView(mRow);
     }
 
     //wrapper for toast function to make it easier to use
@@ -418,6 +423,7 @@ public class MainActivity extends ActionBarActivity {
 
         if(v.getId()==R.id.name) {
             menu.add(Menu.NONE, v.getId(), Menu.NONE, R.string.context1);
+            menu.add(Menu.NONE, v.getId(), Menu.NONE, R.string.context2);
             contextFor = v;
         }
         super.onCreateContextMenu(menu, v, menuInfo);
@@ -456,9 +462,10 @@ public class MainActivity extends ActionBarActivity {
     public boolean onContextItemSelected(MenuItem item) {
         if(item.getTitle().toString().equals("Clear Row")){
             clearThisRow();
+        }
+        if(item.getTitle().toString().equals("Delete Row")){
 
-            Toast.makeText(MainActivity.this, "row cleared?", Toast.LENGTH_LONG)
-                    .show();
+            removeRow();
         }
         return super.onContextItemSelected(item);
     }
@@ -696,7 +703,7 @@ public class MainActivity extends ActionBarActivity {
 			}
 		} else {
 			Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT)
-					.show(); //todo make this useless by hiding the update button unless casting
+					.show();
 		}
 	}
 
