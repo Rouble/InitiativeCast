@@ -203,8 +203,8 @@ public class MainActivity extends ActionBarActivity {
         int init2;
         boolean checkTemp;
         boolean notDone = true;
-        String tempName;
-        String tempInit;
+        String tempName, tempInit, tempWeight;
+        double weight1, weight2;
 
         while(notDone) {
             notDone = false; //this lets the bubble sort end early
@@ -213,14 +213,17 @@ public class MainActivity extends ActionBarActivity {
             for (int i = 0; i < mTable.getChildCount() - pass; i++) {
                 //load up 2 rows to compare
                 TableRow mRow = (TableRow) mTable.getChildAt(i);
-                CheckBox mCheck = (CheckBox) mRow.getChildAt(0);
-                EditText mName = (EditText) mRow.getChildAt(1);
-                EditText mInit = (EditText) mRow.getChildAt(2);
+                EditText mName = (EditText) mRow.getChildAt(0);
+                EditText mInit = (EditText) mRow.getChildAt(1);
+                EditText mWeight = (EditText) mRow.getChildAt(2);
                     //todo find a way to swap rows instead of their contents
                 TableRow mRow2 = (TableRow) mTable.getChildAt(i+1);
-                CheckBox mCheck2 = (CheckBox) mRow2.getChildAt(0);
-                EditText mName2 = (EditText) mRow2.getChildAt(1);
-                EditText mInit2 = (EditText) mRow2.getChildAt(2);
+                EditText mName2 = (EditText) mRow2.getChildAt(0);
+                EditText mInit2 = (EditText) mRow2.getChildAt(1);
+                EditText mWeight2 = (EditText) mRow2.getChildAt(2);
+
+                weight1 = Double.parseDouble(mWeight.getText().toString()) / 10;
+                weight2 = Double.parseDouble(mWeight2.getText().toString()) / 10;
 
                 //deal with empty initiatives without breaking everything
                 if(mInit.getText().toString().equals("")) {
@@ -238,18 +241,18 @@ public class MainActivity extends ActionBarActivity {
                 }
 
                 //swapping things around
-                if (init1 < init2){
-                    checkTemp = mCheck.isChecked();
+                if ((init1 + weight1) < (init2 + weight2)){
                     tempName = mName.getText().toString();
                     tempInit = mInit.getText().toString();
+                    tempWeight = mWeight.getText().toString();
 
-                    mCheck.setChecked(mCheck2.isChecked());
                     mName.setText(mName2.getText().toString());
                     mInit.setText(mInit2.getText().toString());
+                    mWeight.setText(mWeight2.getText().toString());
 
-                    mCheck2.setChecked(checkTemp);
                     mName2.setText(tempName);
                     mInit2.setText(tempInit);
+                    mWeight2.setText(tempWeight);
 
                     notDone = true;
                 }
